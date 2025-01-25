@@ -72,5 +72,46 @@ else
 fi
 ````
 
+# 1. Préparation de la machine
+
+## 🌞 Exécution du script autoconfig.sh développé à la partie I
+
+Préparation de la machine
+
+sudo ./autoconfig.sh music.tp3.b1
+
+## 🌞 Création d'un dossier où on hébergera les fichiers de musique
+
+sudo mkdir -p /srv/music
+
+## 🌞 Déposez quelques fichiers son là dedans
+
+scp /chemin/vers/tes/fichiers/*.mp3 utilisateur@IP_VM:/srv/music/
+
+# 2. Installation du service de streaming
+
+## 🌞 Ajoutez les dépôts nécessaires pour installer Jellyfin
+
+```sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm -y
+sudo dnf config-manager --set-enabled crb
+```
+
+## 🌞 Installer le paquet jellyfin
+
+sudo dnf install jellyfin -y
+
+## 🌞 Afficher la liste des ports TCP en écoute
+
+sudo ss -tuln | grep jellyfin
+
+## 🌞 Ouvrir le port derrière lequel Jellyfin écoute
+
+sudo firewall-cmd --add-port=8096/tcp --permanent
+sudo firewall-cmd --reload
+
+## 🌞 Visitez l'interface Web !
+
+curl http://IP_VM:8096 
+
 
 
