@@ -36,3 +36,20 @@ which python3
 env |grep "USER" | tr -s ' ' | cut -d'=' -f2
 fariasgomes
 ```
+## 🌞 Afficher le shell par défaut de votre utilisateur actuellement connecté
+
+Shell par défaut :
+
+cat /etc/passwd | grep "^$USER:" | cut -d':' -f7
+
+## 🌞 Afficher le nombre de paquets installés
+
+Sur un système RPM comme Rocky Linux :
+
+rpm -qa | wc -l
+
+## 🌞 Afficher le nombre de ports en écoute
+
+Nombre de ports ouverts :
+
+ss -tunlp | grep LISTEN | wc -l
