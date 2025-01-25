@@ -113,5 +113,64 @@ sudo firewall-cmd --reload
 
 curl http://IP_VM:8096 
 
+## 🌞 Dérouler le script autoconfig.sh
+  ```
+    Connectez-vous à la machine monitoring.tp3.b1.
+    Naviguez vers le répertoire contenant le script autoconfig.sh (développé à la partie I du TP).
+    Exécutez le script :
+
+    bash autoconfig.sh
+
+    Vérifiez que tout s'est déroulé correctement.
+  ```
+
+## 🌞 Installer Netdata
+
+bash <(curl -Ss https://my-netdata.io/kickstart.sh)
+
+    systemctl status netdata
+
+## 🌞 Ajouter un check TCP pour Jellyfin
+
+   ``` Modifiez la configuration de Netdata pour ajouter un check sur le port de Jellyfin :
+        Fichier de configuration à éditer : /etc/netdata/python.d/tcp_check.conf.
+        Ajoutez le bloc suivant :
+
+    jellyfin:
+      name: "Jellyfin Server"
+      address: "10.3.1.11"
+      port: 8096
+```
+
+Redémarrez Netdata pour appliquer les changements :
+  ```
+    systemctl restart netdata
+
+    Vérifiez que le check TCP apparaît dans l'interface de Netdata.
+  ```
+
+## 🌞 Ajout d'une alerte Discord
+  ```
+
+    Configurez les notifications Discord :
+        Fichier à modifier : /etc/netdata/health/notifications/discord.conf.
+        Ajoutez ou modifiez ces lignes pour renseigner votre webhook Discord :
+
+    enabled: yes
+    webhook_url: "https://discord.com/api/webhooks"
+  ```
+```
+Configurez une alerte pour Jellyfin dans
+/etc/netdata/health.d/tcp_check.conf.
+
+alarm: jellyfin_not_responding
+    on: tcp_check.jellyfin
+    lookup: average -1m percentage below 100
+    every: 1m
+    warn: $this < 100
+    to: discord
+
+systemctl restart netdata
+```
 
 
